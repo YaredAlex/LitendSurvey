@@ -38,6 +38,7 @@ const Home = () => {
         console.log(tmp);
         setAnsData(tmp);
       }
+      let build = "";
     };
   }, []);
   return (
