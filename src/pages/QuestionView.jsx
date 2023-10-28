@@ -11,14 +11,19 @@ import { useParams } from "react-router-dom";
 import { db } from "../../firebase.config";
 import "./question.css";
 import swal from "sweetalert";
-import log from "../assets/vite.svg";
+import log from "../assets/log_img.jpeg";
 const QuestionView = () => {
   const { qId } = useParams();
   const [options, setOption] = useState([]);
   const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(true);
   const [ans, setAns] = useState({});
+  const [submited, setSubmited] = useState(false);
   useEffect(() => {
+    if (localStorage.getItem(qId.toString())) {
+      setSubmited(true);
+    }
+
     const getD = async () => {
       setLoading(true);
       const docRef = doc(db, "PoolQuestions", qId);
@@ -71,7 +76,8 @@ const QuestionView = () => {
         [ans.answer]: increment(1),
       });
       swal("Great!", "", "success");
-      console.log(docRef);
+      setSubmited(true);
+      localStorage.setItem(qId.toString(), "submited");
     } catch (e) {
       swal("error", e, "info");
       console.log(e);
@@ -92,51 +98,76 @@ const QuestionView = () => {
             }}
           ></div>
         )}
-        <div className="border border-primary question-card">
-          <p className="h6 text-center text-primary">LITEND</p>
-          <div className="mb-2">
-            <img
-              src={log}
-              alt="image"
+        {!submited && (
+          <div className="border border-primary question-card">
+            <p className="h6 text-center text-primary">LITEND</p>
+            <div className="mb-2">
+              <img
+                src={log}
+                alt="image"
+                style={{
+                  display: "block",
+                  width: "100%",
+                  height: "100px",
+                  objectFit: "contain",
+                }}
+              />
+            </div>
+            <div>
+              <p className="h4 mb-0">
+                {title}
+                {"?"}
+              </p>
+              <hr className="mt-0 mb-3" />
+              <div>
+                {options.map((option, index) => (
+                  <div key={index} className="d-flex  gap-3">
+                    <input
+                      type="radio"
+                      id={option}
+                      name={title}
+                      value={option}
+                      onChange={(e) =>
+                        setAns({ ...ans, answer: e.target.value })
+                      }
+                    />
+                    <label className="question-label" htmlFor={option}>
+                      {option}{" "}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <button
+              className="btn btn-primary mt-3 mx-auto"
               style={{
                 display: "block",
+                maxWidth: "200px",
                 width: "100%",
-                height: "100px",
               }}
-            />
+              onClick={() => sendAns()}
+            >
+              submit
+            </button>
           </div>
-          <div>
-            <p className="h4 mb-0">{title}</p>
-            <hr className="mt-0 mb-3" />
-            <div>
-              {options.map((option, index) => (
-                <div key={index} className="d-flex  gap-3">
-                  <input
-                    type="radio"
-                    id={option}
-                    name={title}
-                    value={option}
-                    onChange={(e) => setAns({ ...ans, answer: e.target.value })}
-                  />
-                  <label className="question-label" htmlFor={option}>
-                    {option}{" "}
-                  </label>
-                </div>
-              ))}
+        )}
+        {submited && (
+          <div className="border border-primary question-card">
+            <p className="h6 text-center text-primary">LITEND</p>
+            <div className="mb-2">
+              <img
+                src={log}
+                alt="image"
+                style={{
+                  display: "block",
+                  width: "100%",
+                  height: "100px",
+                }}
+              />
             </div>
+            <p className="h5 text-center">Thank you!</p>
           </div>
-          <button
-            className="btn btn-primary mt-3 mx-auto"
-            style={{
-              display: "block",
-              maxWidth: "200px",
-              width: "100%",
-            }}
-            onClick={() => sendAns()}
-          >
-            submit
-          </button>
-        </div>
+        )}
       </div>
     </>
   );

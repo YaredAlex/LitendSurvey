@@ -64,7 +64,7 @@ const MakePool = () => {
               <input
                 className="form-control"
                 type="number"
-                placeholder="2"
+                placeholder="0"
                 style={{ maxWidth: 100 }}
                 max={"5"}
                 min={1}
@@ -90,7 +90,7 @@ const MakePool = () => {
   const MO = (n) => {
     const res = [];
     if (n > 5) {
-      alert("To big Options");
+      swal("To large", "options input", "danger");
       n = 5;
     }
     for (let i = 0; i < n; i++)
@@ -101,7 +101,7 @@ const MakePool = () => {
             maxWidth: "500px",
           }}
         >
-          <label className="h6">Question {i + 1}</label>
+          <label className="h6 mb-0 mt-2">Option{i + 1}</label>
           <input
             className="form-control"
             type="text"
@@ -116,11 +116,17 @@ const MakePool = () => {
     return res;
   };
   const storeQuestion = async () => {
-    let data = {
-      title: qTitle,
-      option: Object.values(options),
-    };
-    save(data);
+    if (qTitle == "" || qTitle.length < 5) {
+      swal("Invalid Question", "", "info");
+    } else if (Object.keys(options).length < 2) {
+      swal("At least two option should be filled", "", "info");
+    } else {
+      let data = {
+        title: qTitle,
+        option: Object.values(options),
+      };
+      save(data);
+    }
   };
   const save = async (data) => {
     try {
@@ -135,7 +141,12 @@ const MakePool = () => {
   return (
     <>
       <Navigation />
-      <div className="container mx-auto w-75 mt-4 border border-secondary  p-2">
+      <div
+        className="container mx-auto w-75 mt-4   p-2"
+        style={{
+          boxShadow: "0px 10px 15px -3px rgba(0,0,0,0.1)",
+        }}
+      >
         <p className="text-center h3 ">Make Pool</p>
         <div>
           <div className="d-flex flex-column gap-2" style={{ maxWidth: 300 }}>
@@ -161,12 +172,17 @@ const MakePool = () => {
             </button>
           )}
           <div>
-            <p>You Pools</p>
+            <p className="mb-0 mt-3 h6">Check out Pools</p>
             <div className="d-flex flex-column">
               {qId.map((id, index) => (
-                <Link key={index} to={`/pool-question/${id}`}>
-                  {`pool ${index + 1}`} {`/pool-question/${id}`}{" "}
-                </Link>
+                <div key={index} className="mb-1">
+                  <Link
+                    to={`/LitendSurvey/pool-question/${id}`}
+                    className="btn btn-outline-secondary"
+                  >
+                    {`pool ${index + 1}`} {`/pool-question/${id}`}{" "}
+                  </Link>
+                </div>
               ))}
             </div>
           </div>

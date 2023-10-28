@@ -12,8 +12,14 @@ function App() {
         <Routes>
           <Route path="/LitendSurvey" element={<Home />} />
           <Route path="/make-pool" element={<MakePool />} />
+          <Route path="/LitendSurvey/make-pool" element={<MakePool />} />
           <Route path="/pool-question/:qId" element={<QuestionView />} />
+          <Route
+            path="/Litendsurvey/pool-question/:qId"
+            element={<QuestionView />}
+          />
           <Route path="/get-detail/:id" element={<PoolDetail />} />
+          <Route path="/LitendSurvey/get-detail/:id" element={<PoolDetail />} />
         </Routes>
       </BrowserRouter>
     </>

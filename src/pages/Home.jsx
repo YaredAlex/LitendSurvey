@@ -38,7 +38,6 @@ const Home = () => {
         console.log(tmp);
         setAnsData(tmp);
       }
-      let build = "";
     };
   }, []);
   return (
@@ -46,7 +45,7 @@ const Home = () => {
       <Navigation />
 
       <div
-        className="container mx-auto mt-4 border border-secondary summary-container p-2"
+        className="container mx-auto mt-4 summary-container p-2"
         style={{
           maxWidth: "900px",
         }}
@@ -91,13 +90,16 @@ const Home = () => {
                 </div>
                 <div>
                   <p className="mb-0">Link</p>
-                  <Link key={index} to={`/pool-question/${pool.id}`}>
+                  <Link
+                    key={index}
+                    to={`/LitendSurvey/pool-question/${pool.id}`}
+                  >
                     {`/pool-question/${pool.id}`}{" "}
                   </Link>
                 </div>
                 <hr />
                 <Link
-                  to={`/get-detail/${pool.id}`}
+                  to={`/LitendSurvey/get-detail/${pool.id}`}
                   className="btn btn-secondary"
                 >
                   GetDetail
