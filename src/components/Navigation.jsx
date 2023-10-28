@@ -10,7 +10,7 @@ const Navigation = () => {
   return (
     <div>
       <div className="container-fluid border border-1 border-primary  d-flex gap-5 align-items-center">
-        <div className="logo h2 text-primary">Litend</div>
+        <div className="logo h2 text-primary p-2">Litend</div>
         <div
           className={`nav-wrapper  d-md-block ${toggle ? "nav-active" : ""}`}
         >
@@ -22,7 +22,10 @@ const Navigation = () => {
               </Link>
             </li>
             <li className="p-2">
-              <Link to={"/make-pool"} className="btn btn-outline-secondary">
+              <Link
+                to={"/LitendSurvey/make-pool"}
+                className="btn btn-outline-secondary"
+              >
                 Make Pool
               </Link>
             </li>
