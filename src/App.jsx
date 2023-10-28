@@ -10,7 +10,7 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/LitendSurvey" element={<Home />} />
           <Route path="/make-pool" element={<MakePool />} />
           <Route path="/pool-question/:qId" element={<QuestionView />} />
           <Route path="/get-detail/:id" element={<PoolDetail />} />
