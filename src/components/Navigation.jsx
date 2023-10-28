@@ -16,7 +16,7 @@ const Navigation = () => {
         >
           <ul className={`nav-ul-list d-flex gap-4 align-items-center`}>
             <li className="p-2">
-              <Link to={"/"} className="btn btn-outline-secondary">
+              <Link to={"/LitendSurvey"} className="btn btn-outline-secondary">
                 {" "}
                 Home
               </Link>
