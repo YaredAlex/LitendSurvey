@@ -162,6 +162,7 @@ const QuestionView = () => {
                   display: "block",
                   width: "100%",
                   height: "100px",
+                  objectFit: "contain",
                 }}
               />
             </div>
