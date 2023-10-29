@@ -22,7 +22,7 @@ const QuestionView = () => {
   const [submited, setSubmited] = useState(false);
   useEffect(() => {
     if (localStorage.getItem(qId.toString())) {
-      swal("Respose already sumbimted!", "", "info");
+      swal("Respose already submited!", "", "info");
     }
 
     const getD = async () => {
