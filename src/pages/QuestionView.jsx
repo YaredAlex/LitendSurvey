@@ -4,6 +4,7 @@ import {
   doc,
   getDoc,
   increment,
+  serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
@@ -21,7 +22,7 @@ const QuestionView = () => {
   const [submited, setSubmited] = useState(false);
   useEffect(() => {
     if (localStorage.getItem(qId.toString())) {
-      setSubmited(true);
+      swal("Respose already sumbimted!", "", "info");
     }
 
     const getD = async () => {
@@ -49,6 +50,7 @@ const QuestionView = () => {
           country: data.country_name,
           ip: data.ip,
           timeZone: data.timezone,
+          time: new Date().toString(),
         });
       })
       .catch((error) => {
