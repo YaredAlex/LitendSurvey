@@ -21,7 +21,11 @@ const PoolDetail = () => {
           ...res.data(),
         });
       });
-      setTableTitle(Object.keys(ans[0]));
+      let tt = Object.keys(ans[0]);
+      tt.filter((t) => t !== "time");
+      tt.push("time");
+      setTableTitle(tt);
+      console.log(ans);
       setAnsData([...ansData, ...ans]);
     };
     getsubmitions();
@@ -101,7 +105,7 @@ const PoolDetail = () => {
               {ansData.map((ans, index) => (
                 <tr key={index}>
                   {tableTitle.map((title, key) => (
-                    <td key={key}>{ans[title]}</td>
+                    <td key={key}>{ans[title] || "Not given"}</td>
                   ))}
                 </tr>
               ))}
