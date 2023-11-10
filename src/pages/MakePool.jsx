@@ -12,7 +12,7 @@ const MakePool = () => {
   const [makeOption, setMakeOption] = useState(false);
   const [options, setOptions] = useState({});
   const [qData, setQData] = useState({});
-  const [qTitle, setQTitle] = useState("");
+  const [qTitle, setQTitle] = useState({});
   const [qId, setQId] = useState([]);
   useEffect(() => {
     const getD = async () => {
@@ -30,9 +30,9 @@ const MakePool = () => {
     let n = e.target.value;
     if (n > 0) {
       setShowQuestion(true);
+      setNquestion(e.target.value);
     } else {
       showQuestion(false);
-      setNquestion(e.target.value);
     }
   };
   const generateQuestionInput = (n) => {
@@ -41,26 +41,29 @@ const MakePool = () => {
       res.push(
         <>
           <div
-            className="d-flex flex-column gap-2"
+            className="d-flex flex-column "
             style={{
               maxWidth: "500px",
             }}
           >
-            <label className="h6">Question {i + 1}</label>
+            <label className="h6 mt-2">**Question {i + 1}</label>
             <input
-              className="form-control"
+              className="form-control mt-0"
               type="text"
               name={`tag`}
               placeholder="Your question"
               onChange={(e) => {
-                setQTitle(e.target.value);
+                //setQTitle(e.target.value);
+                setQTitle({ ...qTitle, [i + 1]: e.target.value });
               }}
             />
           </div>
           <div className="d-flex flex-column gap-2" style={{ maxWidth: 300 }}>
             <label className="h6">Number of Option</label>
-
-            <div className="d-flex align-items-center gap-3">
+            {generateOption(5, i + 1).map((item, index) => (
+              <div key={index}>{item}</div>
+            ))}
+            {/* <div className="d-flex align-items-center gap-3">
               <input
                 className="form-control"
                 type="number"
@@ -80,14 +83,14 @@ const MakePool = () => {
               >
                 Select
               </button>
-            </div>
+            </div> */}
           </div>
         </>
       );
 
     return res;
   };
-  const generateOption = (n) => {
+  const generateOption = (n, id) => {
     const res = [];
     if (n > 5) {
       swal("To large", "options input", "danger");
@@ -96,36 +99,49 @@ const MakePool = () => {
     for (let i = 0; i < n; i++)
       res.push(
         <div
-          className="d-flex flex-column gap-2"
+          className="d-flex flex-column gap-2 ms-4"
           style={{
             maxWidth: "500px",
           }}
         >
-          <label className="h6 mb-0 mt-2">Option{i + 1}</label>
+          <label className="h6 mb-0 mt-1">Option{i + 1}</label>
           <input
             className="form-control"
             type="text"
             name={`option ${i + 1}`}
             placeholder={`option ${i + 1}`}
-            onChange={(e) =>
-              setOptions({ ...options, [e.target.name]: e.target.value })
-            }
+            onChange={(e) => {
+              //setOptions({ ...options, [e.target.name]: e.target.value })
+              setOptions({
+                ...options,
+                [id]: {
+                  ...(options[id] || ""),
+                  [e.target.name]: e.target.value,
+                },
+              });
+            }}
           />
         </div>
       );
     return res;
   };
   const storeQuestion = async () => {
-    if (qTitle == "" || qTitle.length < 5) {
-      swal("Invalid Question", "", "info");
-    } else if (Object.keys(options).length < 2) {
-      swal("At least two option should be filled", "", "info");
-    } else {
-      let data = {
-        title: qTitle,
-        option: Object.values(options),
-      };
-      save(data);
+    let flag = 0;
+    let questionData = [];
+    for (let i = 1; i <= nQuestion; i++) {
+      if (Object.values(options[i]).length < 1) {
+        flag = 1;
+        swal("Warning", `Question ${i} have less option`, "info");
+      }
+      questionData.push({
+        title: qTitle[i],
+        option: Object.values(options[i]),
+        id: i,
+      });
+    }
+    console.log(questionData);
+    if (flag == 0) {
+      save(questionData);
     }
   };
   const save = async (data) => {
@@ -154,20 +170,33 @@ const MakePool = () => {
             <select className="form-control" onChange={(e) => sQ(e)}>
               <option value={0}>choose Option</option>
               <option value={1}>1</option>
+              <option value={2}>2</option>
+              <option value={3}>3</option>
+              <option value={4}>4</option>
+              <option value={5}>5</option>
+              <option value={6}>6</option>
             </select>
           </div>
-          {showQuestion &&
-            generateQuestionInput(nQuestion).map((item, index) => (
-              <div key={index}>{item}</div>
-            ))}
-          {makeOption &&
+          <div className="d-flex flex-wrap justify-content-between">
+            {showQuestion &&
+              generateQuestionInput(nQuestion).map((item, index) => (
+                <div
+                  key={index}
+                  className="w-100"
+                  style={{ maxWidth: "400px" }}
+                >
+                  {item}
+                </div>
+              ))}
+          </div>
+          {/* {makeOption &&
             generateOption(noption).map((item, index) => (
               <div key={index}>{item} </div>
-            ))}
+            ))} */}
 
-          {showQuestion && makeOption && (
+          {showQuestion && (
             <button
-              className="btn btn-secondary mt-5"
+              className="btn btn-secondary mt-2"
               onClick={() => {
                 storeQuestion();
               }}
