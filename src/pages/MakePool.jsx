@@ -129,12 +129,26 @@ const MakePool = () => {
     let flag = 0;
     let questionData = [];
     for (let i = 1; i <= nQuestion; i++) {
-      if (Object.values(options[i]).length < 1) {
+      if (!qTitle[i]) {
+        flag = 1;
+        swal("Warning", `Question ${i} is Not given`, "info");
+        break;
+      }
+      if (!options[i]) {
+        flag = 1;
+        swal("Warning", `Question ${i} have No given option`, "info");
+        break;
+      }
+
+      if (
+        Object.values(options[i]) == undefined ||
+        Object.values(options[i]).length < 1
+      ) {
         flag = 1;
         swal("Warning", `Question ${i} have less option`, "info");
       }
       questionData.push({
-        title: qTitle[i],
+        title: qTitle[i].trim(),
         option: Object.values(options[i]),
         id: i,
       });
@@ -177,6 +191,10 @@ const MakePool = () => {
               <option value={4}>4</option>
               <option value={5}>5</option>
               <option value={6}>6</option>
+              <option value={7}>7</option>
+              <option value={8}>8</option>
+              <option value={9}>9</option>
+              <option value={10}>10</option>
             </select>
           </div>
           <div className="d-flex flex-wrap justify-content-between">
