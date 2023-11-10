@@ -141,16 +141,18 @@ const MakePool = () => {
     }
     console.log(questionData);
     if (flag == 0) {
-      save(questionData);
+      save({ question: questionData });
     }
   };
   const save = async (data) => {
     try {
       const docRef = await addDoc(collection(db, "PoolQuestions"), data);
       swal("Saved", "", "success");
-      console.log(docRef);
+      setNquestion(0);
+      setOptions({});
+      setQTitle({});
     } catch (e) {
-      swal("error", e, "info");
+      swal("error", e.message, "info");
       console.log(e);
     }
   };
