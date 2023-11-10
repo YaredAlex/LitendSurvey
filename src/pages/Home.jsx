@@ -24,10 +24,12 @@ const Home = () => {
         });
       });
       setPools(pools);
+      console.log(pools);
       setQId(ids);
       getSubmition();
     };
     getpools();
+
     const getSubmition = async () => {
       for (let i of ids) {
         const tmp = [];
@@ -65,35 +67,64 @@ const Home = () => {
           {pools.map((pool, index) => (
             <div
               key={index}
-              style={{ backgroundColor: "white", maxWidth: "800px" }}
-              className=" p-3 d-flex align-items-center gap-4 mb-4 justify-content-between"
+              style={{ backgroundColor: "white", maxWidth: "900px" }}
+              className=" p-3 d-flex align-items-center mb-4 flex-column"
             >
               <div>
-                <p className="h6 mb-2">{pool.title}</p>
-                {pool.option.map((op, index) => (
+                {pool.question.map((question, key) => (
                   <div
-                    key={index}
-                    className="d-flex align-items-center mb-3 w-100 justify-content-between  border-bottom"
-                    style={{ maxWidth: 500 }}
+                    key={key}
+                    className="d-md-flex flex-row justify-content-between align-items-center"
                   >
-                    <p className="m-0"> {op}</p>
-                    <p className="h6 m-0 ">{pool[op] || 0}</p>
+                    <div>
+                      <p className="h6 mb-2">{question.title}</p>
+                      {question.option.map((op, index) => (
+                        <div
+                          key={index}
+                          className="d-flex align-items-center mb-3 w-100 justify-content-between  border-bottom"
+                          style={{ maxWidth: 500 }}
+                        >
+                          <p className="m-0"> {op}</p>
+                          <p className="h6 m-0 ">
+                            {pool[op + question.id] || 0}
+                          </p>
+                        </div>
+                      ))}
+                      <div
+                        className="d-flex  align-items-center mb-3 w-100 justify-content-between  border-bottom"
+                        style={{ maxWidth: 500 }}
+                      >
+                        <p className="m-0">Total Submition</p>
+                        <p className="m-0"> {pool.count}</p>
+                      </div>
+                    </div>
+
+                    <div
+                      style={{
+                        maxWidth: 300,
+                        backgroundColor: "white",
+                      }}
+                      className="p-2 rounded my-2 d-none d-md-block"
+                    >
+                      <DoughnutBar
+                        data={{
+                          labels: Object.values(question.option),
+                          datasets: [
+                            {
+                              label: question.title,
+                              data: question.option.map(
+                                (op) => pool[op + question.id] || 0
+                              ),
+                            },
+                          ],
+                        }}
+                      />
+                    </div>
                   </div>
                 ))}
-                <div
-                  key={index}
-                  className="d-flex  align-items-center mb-3 w-100 justify-content-between  border-bottom"
-                  style={{ maxWidth: 500 }}
-                >
-                  <p className="m-0">Total Submition</p>
-                  <p className="m-0"> {pool.count}</p>
-                </div>
                 <div>
                   <p className="mb-0">Link</p>
-                  <Link
-                    key={index}
-                    to={`/LitendSurvey/pool-question/${pool.id}`}
-                  >
+                  <Link to={`/LitendSurvey/pool-question/${pool.id}`}>
                     {`/pool-question/${pool.id}`}{" "}
                   </Link>
                 </div>
@@ -104,25 +135,6 @@ const Home = () => {
                 >
                   GetDetail
                 </Link>
-              </div>
-              <div
-                style={{
-                  maxWidth: 300,
-                  backgroundColor: "white",
-                }}
-                className="p-2 rounded my-2 d-none d-md-block"
-              >
-                <DoughnutBar
-                  data={{
-                    labels: Object.values(pool.option),
-                    datasets: [
-                      {
-                        label: pool.title,
-                        data: pool.option.map((op) => pool[op] || 0),
-                      },
-                    ],
-                  }}
-                />
               </div>
             </div>
           ))}
