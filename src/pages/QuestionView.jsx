@@ -32,9 +32,7 @@ const QuestionView = () => {
       const result = await getDoc(docRef);
       console.log(result.data());
       if (result.exists) {
-        setTitle(result.data().title);
-        setOption(result.data().option);
-        setQuestion(result.data().quesiton);
+        setQuestion(result.data().question);
       } else {
         console.log(result);
       }
@@ -73,9 +71,14 @@ const QuestionView = () => {
       const upDoc = doc(db, "PoolQuestions", qId);
 
       // Update the timestamp field with the value from the server
+      let inc = {};
+      question.forEach((que) => {
+        inc = { ...inc, [ans[que.title] + que.id]: increment(1) };
+      });
+      console.log(inc);
       const update = await updateDoc(upDoc, {
         count: increment(1),
-        // [ans.answer]: increment(1),
+        ...inc,
       });
       swal("Great!", "", "success");
       setSubmited(true);
