@@ -4,7 +4,6 @@ import {
   doc,
   getDoc,
   increment,
-  serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
@@ -13,6 +12,7 @@ import { db } from "../../firebase.config";
 import "./question.css";
 import swal from "sweetalert";
 import log from "../assets/log_img.jpeg";
+
 const QuestionView = () => {
   const { qId } = useParams();
   const [options, setOption] = useState([]);
@@ -25,7 +25,7 @@ const QuestionView = () => {
       swal("Respose already submited!", "", "info");
     }
 
-    const getD = async () => {
+    const getQuestion = async () => {
       setLoading(true);
       const docRef = doc(db, "PoolQuestions", qId);
       const result = await getDoc(docRef);
@@ -37,13 +37,11 @@ const QuestionView = () => {
       }
       setLoading(false);
     };
-    getD();
+    getQuestion();
+    //Getting users location for servery purpose
     fetch("https://ipapi.co/json/")
       .then((response) => response.json())
       .then((data) => {
-        // Access the country from the response
-        const country = data.country_name;
-        console.log("User's country:", country);
         setAns({
           ...ans,
           city: data.city,
@@ -57,6 +55,7 @@ const QuestionView = () => {
         console.error("Error:", error);
       });
   }, []);
+
   const sendAns = () => {
     if (ans == "") {
       swal("please select one", "", "info");
@@ -90,6 +89,7 @@ const QuestionView = () => {
       <div className="question-container d-flex justify-content-center align-items-center">
         {loading && (
           <div
+            className="d-flex justify-content-center align-items-center"
             style={{
               position: "absolute",
               top: "0",
@@ -98,7 +98,9 @@ const QuestionView = () => {
               backgroundColor: "rgb(0,0,0,0.4)",
               zIndex: 3,
             }}
-          ></div>
+          >
+            <p className="h5 bg-white p-3">Loading...</p>
+          </div>
         )}
         {!submited && (
           <div className="border border-primary question-card">
