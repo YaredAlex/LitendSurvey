@@ -68,7 +68,7 @@ const Home = () => {
             <div
               key={index}
               style={{ backgroundColor: "white", maxWidth: "900px" }}
-              className=" p-3 d-flex align-items-center mb-4 flex-column"
+              className=" p-3 d-flex align-items-between mb-4 flex-column"
             >
               <div>
                 {pool.question.map((question, key) => (
@@ -76,7 +76,7 @@ const Home = () => {
                     key={key}
                     className="d-md-flex flex-row justify-content-between align-items-center"
                   >
-                    <div>
+                    <div className="w-100" style={{ maxWidth: "400px" }}>
                       <p className="h6 mb-2">{question.title}</p>
                       {question.option.map((op, index) => (
                         <div
