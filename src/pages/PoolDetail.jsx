@@ -22,11 +22,9 @@ const PoolDetail = () => {
         });
       });
       let tt = Object.keys(ans[0]);
-      tt.filter((t) => t !== "time");
-      tt.push("time");
       setTableTitle(tt);
       console.log(ans);
-      setAnsData([...ansData, ...ans]);
+      setAnsData([...ans]);
     };
     getsubmitions();
     //
@@ -35,6 +33,7 @@ const PoolDetail = () => {
       const pool = [];
       const docRef = doc(db, "PoolQuestions", id);
       const result = await getDoc(docRef);
+
       if (result.exists) {
         pool.push({
           ...result.data(),
@@ -43,10 +42,12 @@ const PoolDetail = () => {
       } else {
         console.log(result);
       }
+      console.log(pool);
       setPool(pool);
       setLoading(false);
     };
     getpool();
+    return setAnsData([]);
   }, []);
   const exportToCsv = () => {
     const csv = Papa.unparse(ansData);
@@ -54,7 +55,7 @@ const PoolDetail = () => {
     const csvUrl = URL.createObjectURL(csvData);
     const link = document.createElement("a");
     link.href = csvUrl;
-    link.setAttribute("download", "data.csv");
+    link.setAttribute("download", `${id}.csv`);
     document.body.appendChild(link);
     link.click();
   };
@@ -65,28 +66,32 @@ const PoolDetail = () => {
         <button className="btn btn-primary my-2" onClick={() => exportToCsv()}>
           GetCSV
         </button>
-        <div>
-          {!loading && (
-            <div
-              className=""
-              style={{
-                maxWidth: "500px",
-                Height: "900px",
-              }}
-            >
-              <BarChart
-                data={{
-                  labels: Object.values(pool[0].option),
-                  datasets: [
-                    {
-                      label: pool[0].title,
-                      data: pool[0].option.map((op) => pool[0][op] || 0),
-                    },
-                  ],
-                }}
-              />
-            </div>
-          )}
+        <div className="d-flex gap-2 flex-wrap w-100 justify-content-around">
+          {!loading &&
+            pool.map((item, key) =>
+              item.question.map((que, index) => (
+                <div
+                  key={index}
+                  className="w-100"
+                  style={{
+                    maxWidth: "500px",
+                    Height: "900px",
+                  }}
+                >
+                  <BarChart
+                    data={{
+                      labels: Object.values(que.option),
+                      datasets: [
+                        {
+                          label: que.title,
+                          data: que.option.map((op) => item[op + que.id] || 0),
+                        },
+                      ],
+                    }}
+                  />
+                </div>
+              ))
+            )}
         </div>
         <div
           style={{
