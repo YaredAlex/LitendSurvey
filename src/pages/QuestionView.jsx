@@ -18,6 +18,7 @@ const QuestionView = () => {
   const [options, setOption] = useState([]);
   const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(true);
+  const [question, setQuestion] = useState([]);
   const [ans, setAns] = useState({});
   const [submited, setSubmited] = useState(false);
   useEffect(() => {
@@ -29,9 +30,11 @@ const QuestionView = () => {
       setLoading(true);
       const docRef = doc(db, "PoolQuestions", qId);
       const result = await getDoc(docRef);
+      console.log(result.data());
       if (result.exists) {
         setTitle(result.data().title);
         setOption(result.data().option);
+        setQuestion(result.data().quesiton);
       } else {
         console.log(result);
       }
@@ -64,6 +67,7 @@ const QuestionView = () => {
     }
   };
   const save = async (ans) => {
+    console.log(ans);
     try {
       const docRef = await addDoc(collection(db, qId), { ...ans });
       const upDoc = doc(db, "PoolQuestions", qId);
@@ -71,10 +75,7 @@ const QuestionView = () => {
       // Update the timestamp field with the value from the server
       const update = await updateDoc(upDoc, {
         count: increment(1),
-        result: {
-          [ans.answer]: increment(1),
-        },
-        [ans.answer]: increment(1),
+        // [ans.answer]: increment(1),
       });
       swal("Great!", "", "success");
       setSubmited(true);
@@ -117,31 +118,38 @@ const QuestionView = () => {
                 }}
               />
             </div>
-            <div>
-              <p className="h4 mb-0">
-                {title}
-                {"?"}
-              </p>
-              <hr className="mt-0 mb-3" />
-              <div>
-                {options.map((option, index) => (
-                  <div key={index} className="d-flex  gap-3">
-                    <input
-                      type="radio"
-                      id={option}
-                      name={title}
-                      value={option}
-                      onChange={(e) =>
-                        setAns({ ...ans, answer: e.target.value })
-                      }
-                    />
-                    <label className="question-label" htmlFor={option}>
-                      {option}{" "}
-                    </label>
+            {question &&
+              question.map((item, key) => (
+                <div key={key} className="mt-2">
+                  <p className="h4 mb-0">
+                    {item.title}
+                    {"?"}
+                  </p>
+                  <hr className="mt-0 mb-3" />
+                  <div>
+                    {item.option.map((option, index) => (
+                      <div key={index} className="d-flex  gap-3">
+                        <input
+                          type="radio"
+                          id={`${option + key}`}
+                          name={item.title}
+                          value={option}
+                          onChange={(e) =>
+                            setAns({ ...ans, [item.title]: e.target.value })
+                          }
+                        />
+                        <label
+                          className="question-label"
+                          htmlFor={option + key}
+                        >
+                          {option}{" "}
+                        </label>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </div>
+                </div>
+              ))}
+
             <button
               className="btn btn-primary mt-3 mx-auto"
               style={{
