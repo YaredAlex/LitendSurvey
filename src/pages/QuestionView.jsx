@@ -30,7 +30,6 @@ const QuestionView = () => {
       setLoading(true);
       const docRef = doc(db, "PoolQuestions", qId);
       const result = await getDoc(docRef);
-      console.log(result.data());
       if (result.exists) {
         setQuestion(result.data().question);
       } else {
@@ -58,14 +57,16 @@ const QuestionView = () => {
   }, []);
 
   const sendAns = () => {
-    if (ans == "") {
-      swal("please select one", "", "info");
-    } else {
-      save(ans);
-    }
+    let flag = 0;
+    question.forEach((que) => {
+      if (!ans[que.title]) {
+        flag = 1;
+      }
+    });
+    if (flag == 1) swal("please select all", "", "info");
+    else save(ans);
   };
   const save = async (ans) => {
-    console.log(ans);
     try {
       const docRef = await addDoc(collection(db, qId), { ...ans });
       const upDoc = doc(db, "PoolQuestions", qId);
@@ -75,7 +76,6 @@ const QuestionView = () => {
       question.forEach((que) => {
         inc = { ...inc, [ans[que.title] + que.id]: increment(1) };
       });
-      console.log(inc);
       const update = await updateDoc(upDoc, {
         count: increment(1),
         ...inc,
@@ -93,7 +93,7 @@ const QuestionView = () => {
       <div className="question-container d-flex justify-content-center align-items-center">
         {loading && (
           <div
-            className="d-flex justify-content-center align-items-center"
+            className="d-flex justify-content-center align-items-center "
             style={{
               position: "absolute",
               top: "0",
@@ -107,8 +107,10 @@ const QuestionView = () => {
           </div>
         )}
         {!submited && (
-          <div className="border border-primary question-card">
-            <p className="h6 text-center text-primary">LITEND</p>
+          <div className="border border-primary rounded question-card">
+            <p className="h4 text-center " style={{ color: "#7952b3" }}>
+              LITEND
+            </p>
             <div className="mb-2">
               <img
                 src={log}
@@ -154,15 +156,18 @@ const QuestionView = () => {
               ))}
 
             <button
-              className="btn btn-primary mt-3 mx-auto"
+              className="btn w-100  mt-3 mx-auto"
               style={{
+                maxWidth: "300px",
+                fontWeight: "bold",
                 display: "block",
-                maxWidth: "200px",
-                width: "100%",
+                backgroundColor: "#7952b3",
+                color: "white",
+                fontSize: "18px",
               }}
               onClick={() => sendAns()}
             >
-              submit
+              Submit
             </button>
           </div>
         )}
