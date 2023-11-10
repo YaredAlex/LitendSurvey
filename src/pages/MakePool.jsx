@@ -20,10 +20,8 @@ const MakePool = () => {
       let ids = [];
       querySnapshot.forEach((res) => {
         // doc.data() is never undefined for query doc snapshots
-        console.log(res.id);
         ids.push(res.id);
       });
-      console.log(ids, "ids");
       setQId(ids);
     };
     getD();
@@ -32,10 +30,12 @@ const MakePool = () => {
     let n = e.target.value;
     if (n > 0) {
       setShowQuestion(true);
-    } else showQuestion(false);
-    setNquestion(e.target.value);
+    } else {
+      showQuestion(false);
+      setNquestion(e.target.value);
+    }
   };
-  const SS = (n) => {
+  const generateQuestionInput = (n) => {
     const res = [];
     for (let i = 0; i < n; i++)
       res.push(
@@ -87,7 +87,7 @@ const MakePool = () => {
 
     return res;
   };
-  const MO = (n) => {
+  const generateOption = (n) => {
     const res = [];
     if (n > 5) {
       swal("To large", "options input", "danger");
@@ -157,9 +157,13 @@ const MakePool = () => {
             </select>
           </div>
           {showQuestion &&
-            SS(nQuestion).map((item, index) => <div key={index}>{item}</div>)}
+            generateQuestionInput(nQuestion).map((item, index) => (
+              <div key={index}>{item}</div>
+            ))}
           {makeOption &&
-            MO(noption).map((item, index) => <div key={index}>{item} </div>)}
+            generateOption(noption).map((item, index) => (
+              <div key={index}>{item} </div>
+            ))}
 
           {showQuestion && makeOption && (
             <button
