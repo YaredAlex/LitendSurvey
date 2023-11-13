@@ -12,7 +12,7 @@ import { db } from "../../firebase.config";
 import "./question.css";
 import swal from "sweetalert";
 import log from "../assets/log_img.jpeg";
-
+import ReactLoading from "react-loading";
 const QuestionView = () => {
   const maxQuestion = 5;
   const { qId } = useParams();
@@ -130,10 +130,18 @@ const QuestionView = () => {
               height: "100vh",
               width: "100%",
               backgroundColor: "rgb(0,0,0,0.4)",
-              zIndex: 3,
+              zIndex: 200,
             }}
           >
-            <p className="h5 bg-white p-3">Loading...</p>
+            <div className="h5 bg-white p-3 rounded d-flex align-items-center flex-column ">
+              <ReactLoading
+                type={"spin"}
+                color="black"
+                height={50}
+                width={50}
+              />
+              <p className="mt-2">Loading..</p>
+            </div>
           </div>
         )}
 
