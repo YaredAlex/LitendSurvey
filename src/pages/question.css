@@ -2,7 +2,7 @@
   background-image: url("../assets/landscape1_2.svg");
   background-repeat: no-repeat;
   background-size: cover;
-  height: 100vh;
+  min-height: 100vh;
 }
 .question-card {
   background-color: white;
